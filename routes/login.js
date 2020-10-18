@@ -47,13 +47,11 @@ app.post('/login', function(req, res) {
             expiresIn: process.env.ACCESS_TOKEN_LIFE
         })
 
-
         res.json({
             ok: true,
             usuario: usuarioDB,
             accessToken: accessToken
         });
-        res.redirect('/my_secret_page');
 
     })
 })
