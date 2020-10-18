@@ -1,16 +1,8 @@
 const mongoose = require('mongoose');
 
-let rolesValidos = {
-    values: ["ADMIN", "USER"],
-    message: '{VALUE} no es un role válido'
-}
 let Schema = mongoose.Schema;
 
 let usuarioSchema = new Schema({
-    nombre: {
-        type: String,
-        required: [true, 'El nombre es necesario'],
-    },
     email: {
         type: String,
         unique: true,
@@ -19,16 +11,10 @@ let usuarioSchema = new Schema({
     password: {
         type: String,
         required: [true, "Le contraseña es obligatoria"],
-    },
-    role: {
-        type: String,
-        default: 'USER',
-        required: [true],
-        enum: rolesValidos,
-    },
+    }
 });
 
-    // elimina la key password del objeto que retorna al momento de crear un usuario
+// elimina la key password del objeto que retorna al momento de crear un usuario
 usuarioSchema.methods.toJSON = function() {
     let user = this;
     let userObject = user.toObject();
