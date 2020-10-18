@@ -4,14 +4,15 @@ const jwt = require('jsonwebtoken');
 const Usuario = require('./../models/usuario');
 const app = express();
 
+
 app.post('/login', function(req, res) {
     // here write code
     let body = req.body;
-    console.log("LOG IN")
+    console.log(body)
     Usuario.findOne({ email: body.email }, (erro, usuarioDB) => {
-        console.log("0")
+
         if (erro) {
-            console.log("1")
+
             return res.status(500).json({
                 ok: false,
                 err: erro
@@ -19,7 +20,7 @@ app.post('/login', function(req, res) {
         }
         // Verifica que exista un usuario con el mail escrita por el usuario.
         if (!usuarioDB) {
-            console.log("2")
+
             return res.status(400).json({
                 ok: false,
                 err: {
@@ -29,7 +30,7 @@ app.post('/login', function(req, res) {
         }
         // Valida que la contraseña escrita por el usuario, sea la almacenada en la db
         if (!bcrypt.compareSync(body.password, usuarioDB.password)) {
-            console.log("3")
+
             return res.status(400).json({
                 ok: false,
                 err: {
@@ -37,18 +38,23 @@ app.post('/login', function(req, res) {
                 }
             });
         }
-        // Genera el token de autenticación
-        console.log("00")
-        let token = jwt.sign({
-            usuario: usuarioDB,
-        }, process.env.SEED_AUTENTICACION, {
-            expiresIn: process.env.CADUCIDAD_TOKEN
+        let payload = {
+                email: body.email
+            }
+            //create the access token with the shorter lifespan
+        let accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
+            algorithm: "HS256",
+            expiresIn: process.env.ACCESS_TOKEN_LIFE
         })
+
+
         res.json({
             ok: true,
             usuario: usuarioDB,
-            token,
-        })
+            accessToken: accessToken
+        });
+        res.redirect('/my_secret_page');
+
     })
 })
 module.exports = app;

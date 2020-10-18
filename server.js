@@ -3,10 +3,10 @@ const connectDB = require('./DB/connection')
 const app = express();
 const bodyParser = require('body-parser')
 const path = require('path');
-
+require("dotenv").config();
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
-// parse application/json
+    // parse application/json
 app.use(bodyParser.json())
 
 app.use(require('./routes/index'));
@@ -15,7 +15,7 @@ app.use(require('./routes/index'));
 
 let renderHTML = path.resolve(__dirname, './public/index.html');
 
-app.get('/', function (req, res) {
+app.get('/', function(req, res) {
     res.sendFile(renderHTML);
 })
 
